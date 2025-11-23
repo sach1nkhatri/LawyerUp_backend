@@ -1,7 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 
-// 🎯 Map field → logical folder (base path)
+// 🎯 Determine base upload folder (logical name)
 const getUploadDir = (file) => {
   const { mimetype, fieldname } = file;
 
@@ -12,6 +12,7 @@ const getUploadDir = (file) => {
   if (fieldname === 'chatpdf') return 'uploads/chatpdf';
   if (fieldname === 'screenshot') return 'uploads/payment';
 
+  // Fallback
   return 'uploads/misc';
 };
 
@@ -32,7 +33,7 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// 📦 Use memory storage so this works on Render & with Cloudinary/local switch
+// 📦 Memory storage so it works on Render & with Cloudinary/local switch
 const storage = multer.memoryStorage();
 
 const upload = multer({ storage, fileFilter });

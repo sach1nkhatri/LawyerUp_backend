@@ -5,36 +5,35 @@ const { getUploadDir } = require('../middleware/uploadMiddleware');
 
 const USE_CLOUDINARY = process.env.USE_CLOUDINARY === 'true';
 
-// 🚀 Upload using Cloudinary (uses buffer from memoryStorage)
+// 🚀 Cloud upload using buffer (for Render / production)
 const uploadToCloudinary = (file) => {
   return new Promise((resolve, reject) => {
-    // convert "uploads/news" → "lawyerup/news"
-    const baseFolder = getUploadDir(file);           // e.g. "uploads/news"
-    const folder = baseFolder.replace(/^uploads/, 'lawyerup');
+    const baseDir = getUploadDir(file);              // e.g. "uploads/news"
+    const folder = baseDir.replace(/^uploads/, 'lawyerup'); // "lawyerup/news"
 
     const resourceType = file.mimetype.startsWith('image/')
       ? 'image'
-      : 'raw'; // pdf or other
+      : 'raw'; // pdf etc
 
-    const uploadStream = cloudinary.uploader.upload_stream(
+    const stream = cloudinary.uploader.upload_stream(
       {
         folder,
         resource_type: resourceType,
       },
-      (error, result) => {
-        if (error) return reject(error);
-        resolve(result.secure_url); // we only care about the final URL
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result.secure_url); // we just return the final URL
       }
     );
 
-    uploadStream.end(file.buffer);
+    stream.end(file.buffer);
   });
 };
 
-// 💾 Upload using local filesystem (writes to /uploads)
+// 💾 Local upload using buffer (for dev on your laptop)
 const uploadToLocal = (file) => {
   return new Promise((resolve, reject) => {
-    const dir = getUploadDir(file); // e.g. "uploads/news"
+    const dir = getUploadDir(file); // "uploads/news", "uploads/lawyers/photo", etc.
 
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -48,14 +47,13 @@ const uploadToLocal = (file) => {
     fs.writeFile(fullPath, file.buffer, (err) => {
       if (err) return reject(err);
 
-      // public path used by frontend (served via Express static, if you want)
-      const publicPath = '/' + fullPath.replace(/\\/g, '/');
+      const publicPath = '/' + fullPath.replace(/\\/g, '/'); // "/uploads/..."
       resolve(publicPath);
     });
   });
 };
 
-// 🌗 Main switch: Cloudinary or Local based on env
+// 🌗 Main switch: Cloudinary or Local depending on env
 const uploadFile = (file) => {
   if (USE_CLOUDINARY) {
     return uploadToCloudinary(file);
