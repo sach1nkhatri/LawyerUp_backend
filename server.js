@@ -85,7 +85,8 @@ app.use(
     origin: [
       'http://localhost:3000',
       'http://localhost:3001',
-      'https://lawyerupnepal.web.nepal'   // ⭐️ your frontend domain
+      'https://lawyerupnepal.web.nepal',   // ⭐️ your frontend domain
+      'https://lawyerupnepaladmin.web.nepal' 
     ],
     credentials: true
   })
@@ -101,8 +102,9 @@ const io = new Server(server, {
     origin: [
       'http://localhost:3000',
       'http://localhost:3001',
-      'https://lawyerupnepal.web.nepal'  // ⭐️ SAME domain for sockets
-    ],
+      'https://lawyerupnepal.web.nepal',  // ⭐️ SAME domain for sockets
+      'https://lawyerupnepaladmin.web.nepal' 
+    ],,
     methods: ['GET', 'POST'],
     credentials: true
   }
