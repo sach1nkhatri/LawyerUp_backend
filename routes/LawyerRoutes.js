@@ -6,6 +6,7 @@ const User = require('../models/User');
 const upload = require('../middleware/uploadMiddleware'); 
 
 
+
 // 🔍 GET: Fetch a lawyer by email or phone
 router.get('/by-user', async (req, res) => {
   try {

@@ -1,11 +1,6 @@
 const News = require('../models/News');
 const fs = require('fs');
-const path = require('path');
-const cloudinary = require('../config/cloudinary');
-const { uploadFile } = require('../utils/cloudinaryUpload');
 
-
-// 🧾 Get all news
 exports.getAllNews = async (req, res) => {
   try {
     const news = await News.find().sort({ createdAt: -1 });
@@ -15,91 +10,59 @@ exports.getAllNews = async (req, res) => {
   }
 };
 
-// 📰 Create news (with Cloudinary image)
 exports.createNews = async (req, res) => {
   try {
     const { title, summary, author, date } = req.body;
-    let image = '';
-
-    if (req.file) {
-      // 🔥 This will either go to Cloudinary OR local /uploads
-      image = await uploadFile(req.file);
-    }
-
+    const image = req.file ? `/uploads/news/${req.file.filename}` : '';
     const news = new News({ title, summary, author, date, image });
     await news.save();
-
     res.status(201).json(news);
   } catch (err) {
-    console.error('Create news error:', err);
     res.status(400).json({ error: err.message });
   }
 };
 
-
-// ✏️ Update news (replace image if new one uploaded)
 exports.updateNews = async (req, res) => {
   try {
     const updateData = { ...req.body };
 
+    // If new image uploaded, replace the old one
     if (req.file) {
       const old = await News.findById(req.params.id);
-
-      // 🧹 If old image was local `/uploads/...`, try to delete old file
-      if (old?.image && old.image.startsWith('/uploads')) {
-        const oldPath = path.join(__dirname, '..', old.image);
-        if (fs.existsSync(oldPath)) {
-          fs.unlinkSync(oldPath);
-        }
+      if (old?.image && fs.existsSync(`.${old.image}`)) {
+        fs.unlinkSync(`.${old.image}`);
       }
-
-      // 🔥 Upload new image (Cloudinary or Local based on USE_CLOUDINARY)
-      updateData.image = await uploadFile(req.file);
+      updateData.image = `/uploads/news/${req.file.filename}`;
     }
 
-    const updated = await News.findByIdAndUpdate(req.params.id, updateData, {
-      new: true,
-    });
-
+    const updated = await News.findByIdAndUpdate(req.params.id, updateData, { new: true });
     res.json(updated);
   } catch (err) {
-    console.error('Update news error:', err);
     res.status(400).json({ error: err.message });
   }
 };
 
-
-// 🗑 Delete news
 exports.deleteNews = async (req, res) => {
   try {
     const deleted = await News.findByIdAndDelete(req.params.id);
-
-    // Old posts that still stored local file paths
-    if (deleted?.image && deleted.image.startsWith('/uploads')) {
-      const imgPath = path.join(__dirname, '..', deleted.image);
-      if (fs.existsSync(imgPath)) {
-        fs.unlinkSync(imgPath);
-      }
+    if (deleted?.image && fs.existsSync(`.${deleted.image}`)) {
+      fs.unlinkSync(`.${deleted.image}`);
     }
-
-    // (Optional: if later you store Cloudinary public_id, you can also destroy there)
-
     res.json({ success: true });
   } catch (err) {
-    console.error('Delete news error:', err);
     res.status(400).json({ error: err.message });
   }
 };
 
 // 🧡 Reactions
+
 exports.likeNews = async (req, res) => {
   const { userId } = req.body;
   const news = await News.findById(req.params.id);
   if (!news) return res.status(404).json({ error: 'News not found' });
-  if (news.likedBy.includes(userId))
-    return res.status(400).json({ error: 'Already liked' });
+  if (news.likedBy.includes(userId)) return res.status(400).json({ error: 'Already liked' });
 
-  news.dislikedBy = news.dislikedBy.filter((u) => u !== userId);
+  news.dislikedBy = news.dislikedBy.filter(u => u !== userId);
   if (news.dislikedBy.length < (news.dislikes || 0)) news.dislikes--;
 
   news.likedBy.push(userId);
@@ -115,7 +78,7 @@ exports.unlikeNews = async (req, res) => {
   if (!news) return res.status(404).json({ error: 'News not found' });
 
   if (news.likedBy.includes(userId)) {
-    news.likedBy = news.likedBy.filter((u) => u !== userId);
+    news.likedBy = news.likedBy.filter(u => u !== userId);
     if (news.likes > 0) news.likes--;
   }
 
@@ -127,10 +90,9 @@ exports.dislikeNews = async (req, res) => {
   const { userId } = req.body;
   const news = await News.findById(req.params.id);
   if (!news) return res.status(404).json({ error: 'News not found' });
-  if (news.dislikedBy.includes(userId))
-    return res.status(400).json({ error: 'Already disliked' });
+  if (news.dislikedBy.includes(userId)) return res.status(400).json({ error: 'Already disliked' });
 
-  news.likedBy = news.likedBy.filter((u) => u !== userId);
+  news.likedBy = news.likedBy.filter(u => u !== userId);
   if (news.likedBy.length < (news.likes || 0)) news.likes--;
 
   news.dislikedBy.push(userId);
@@ -146,7 +108,7 @@ exports.undislikeNews = async (req, res) => {
   if (!news) return res.status(404).json({ error: 'News not found' });
 
   if (news.dislikedBy.includes(userId)) {
-    news.dislikedBy = news.dislikedBy.filter((u) => u !== userId);
+    news.dislikedBy = news.dislikedBy.filter(u => u !== userId);
     if (news.dislikes > 0) news.dislikes--;
   }
 
@@ -155,6 +117,7 @@ exports.undislikeNews = async (req, res) => {
 };
 
 // 💬 Comments
+
 exports.addComment = async (req, res) => {
   const text = req.body.text;
   const user = req.user.fullName || 'Anonymous';
@@ -179,13 +142,14 @@ exports.deleteComment = async (req, res) => {
   if (!comment) return res.status(404).json({ error: 'Comment not found' });
 
   if (comment.user !== user) {
-    return res
-      .status(403)
-      .json({ error: 'You can only delete your own comments.' });
+    return res.status(403).json({ error: 'You can only delete your own comments.' });
   }
 
   news.comments.splice(commentIndex, 1);
   await news.save();
 
   res.json({ comments: news.comments });
+  
+
+  
 };
