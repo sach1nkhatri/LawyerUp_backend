@@ -104,7 +104,7 @@ const io = new Server(server, {
       'http://localhost:3001',
       'https://lawyerupnepal.web.nepal',  // ⭐️ SAME domain for sockets
       'https://lawyerupnepaladmin.web.nepal' 
-    ],,
+    ],
     methods: ['GET', 'POST'],
     credentials: true
   }
