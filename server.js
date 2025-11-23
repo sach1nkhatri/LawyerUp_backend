@@ -66,6 +66,3 @@ if (process.env.NODE_ENV !== 'test') {
 
 // Export app for Supertest (no need to export server)
 module.exports = app;
-
-
-server.js

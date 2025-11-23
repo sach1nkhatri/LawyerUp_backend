@@ -1,5 +1,5 @@
 // Yeah, I know there are like 101 crypto libraries out there —
-// but I brought back this simple custom text cipher I built in Python during my first semester. (now its java)
+// but I brought back this simple custom cipher I built in Python during my first semester.
 // It’s basic, nostalgic, and perfect for showing beginners how encryption works at a low level.
 
 const encryptionMap = {
