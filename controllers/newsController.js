@@ -2,6 +2,8 @@ const News = require('../models/News');
 const fs = require('fs');
 const path = require('path');
 const cloudinary = require('../config/cloudinary');
+const { uploadFile } = require('../utils/cloudinaryUpload');
+
 
 // 🧾 Get all news
 exports.getAllNews = async (req, res) => {
@@ -20,15 +22,8 @@ exports.createNews = async (req, res) => {
     let image = '';
 
     if (req.file) {
-      // 1️⃣ Upload to Cloudinary
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: 'lawyerup/news',
-      });
-
-      image = result.secure_url;
-
-      // 2️⃣ Delete local temp file
-      fs.unlink(req.file.path, () => {});
+      // 🔥 This will either go to Cloudinary OR local /uploads
+      image = await uploadFile(req.file);
     }
 
     const news = new News({ title, summary, author, date, image });
@@ -41,6 +36,7 @@ exports.createNews = async (req, res) => {
   }
 };
 
+
 // ✏️ Update news (replace image if new one uploaded)
 exports.updateNews = async (req, res) => {
   try {
@@ -49,7 +45,7 @@ exports.updateNews = async (req, res) => {
     if (req.file) {
       const old = await News.findById(req.params.id);
 
-      // 🧹 If old image was local `/uploads/...`, try to delete it
+      // 🧹 If old image was local `/uploads/...`, try to delete old file
       if (old?.image && old.image.startsWith('/uploads')) {
         const oldPath = path.join(__dirname, '..', old.image);
         if (fs.existsSync(oldPath)) {
@@ -57,15 +53,8 @@ exports.updateNews = async (req, res) => {
         }
       }
 
-      // 1️⃣ Upload new one to Cloudinary
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: 'lawyerup/news',
-      });
-
-      updateData.image = result.secure_url;
-
-      // 2️⃣ Delete local temp file
-      fs.unlink(req.file.path, () => {});
+      // 🔥 Upload new image (Cloudinary or Local based on USE_CLOUDINARY)
+      updateData.image = await uploadFile(req.file);
     }
 
     const updated = await News.findByIdAndUpdate(req.params.id, updateData, {
@@ -78,6 +67,7 @@ exports.updateNews = async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 };
+
 
 // 🗑 Delete news
 exports.deleteNews = async (req, res) => {

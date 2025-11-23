@@ -1,0 +1,175 @@
+LawyerUp_backend/
+│
+├── .env
+├── .gitignore
+├── app.js
+├── package.json
+├── package-lock.json
+├── README.md
+├── READ.md
+├── server.js
+│
+├── .idea/
+│   ├── .gitignore
+│   ├── LawyerUp_DB.iml
+│   ├── misc.xml
+│   ├── modules.xml
+│   └── vcs.xml
+│
+├── config/
+│   ├── cloudinary.js
+│   └── database.js
+│
+├── controllers/
+│   ├── adminControlController.js
+│   ├── aiController.js
+│   ├── analyticsController.js
+│   ├── authController.js
+│   ├── bookingController.js
+│   ├── deleteAccountController.js
+│   ├── faqController.js
+│   ├── lawyerController.js
+│   ├── newsController.js
+│   ├── paymentController.js
+│   ├── pdfController.js
+│   ├── reportController.js
+│   └── reviewController.js
+│
+├── middleware/
+│   ├── authMiddleware.js
+│   └── uploadMiddleware.js
+│
+├── models/
+│   ├── Analytics.js
+│   ├── Booking.js
+│   ├── chat.js
+│   ├── faq.js
+│   ├── Lawyer.js
+│   ├── News.js
+│   ├── payment.js
+│   ├── pdf.js
+│   ├── PdfVector.js
+│   ├── Report.js
+│   └── User.js
+│
+├── routes/
+│   ├── adminControlRoutes.js
+│   ├── aiRoutes.js
+│   ├── analytics.js
+│   ├── authRoutes.js
+│   ├── bookingRoutes.js
+│   ├── deleteRoutes.js
+│   ├── faqRoutes.js
+│   ├── LawyerRoutes.js
+│   ├── newsRoutes.js
+│   ├── paymentRoutes.js
+│   ├── pdfRoutes.js
+│   ├── reportRoutes.js
+│   └── reviewRoutes.js
+│
+├── tests/
+│   └── model_and_route_test/
+│       ├── ai.test.js
+│       ├── auth.test.js
+│       ├── booking.test.js
+│       ├── lawyer.test.js
+│       └── review.test.js
+│
+├── uploads/
+│   ├── lawyers/
+│   │   ├── license/
+│   │   │   ├── licenseFile-1750951502802-950699922.pdf
+│   │   │   ├── licenseFile-1751479626211-182268343.pdf
+│   │   │   ├── licenseFile-1751479866645-800523412.pdf
+│   │   │   ├── licenseFile-1751480047669-1741555.pdf
+│   │   │   ├── licenseFile-1753787043967-374468154.pdf
+│   │   │   ├── licenseFile-1753995562338-623128952.pdf
+│   │   │   ├── licenseFile-1753996041846-576399442.pdf
+│   │   │   └── licenseFile-1760610243419-38633758.pdf
+│   │   │
+│   │   └── photo/
+│   │       ├── profilePhoto-1753787043967-637505549.jpg
+│   │       ├── profilePhoto-1753995562335-336683647.png
+│   │       ├── profilePhoto-1753996041844-953421025.png
+│   │       ├── profilePhoto-1760610243417-514085184.jpg
+│   │       ├── profilePhoto-allison-ferguson.jpg
+│   │       ├── profilePhoto-anthony-coleman.jpg
+│   │       ├── profilePhoto-carl-nunez.jpg
+│   │       ├── profilePhoto-christina-berry.jpg
+│   │       ├── profilePhoto-edward-johnston.jpg
+│   │       ├── profilePhoto-katherine-harrison.jpg
+│   │       ├── profilePhoto-lisa-duke.jpg
+│   │       ├── profilePhoto-luis-haynes.jpg
+│   │       ├── profilePhoto-marcus-rios.jpg
+│   │       ├── profilePhoto-michelle-phillips.jpg
+│   │       ├── profilePhoto-oscar-steele.jpg
+│   │       ├── profilePhoto-ronnie-pittman.jpg
+│   │       ├── profilePhoto-vanessa-washington.jpg
+│   │       ├── profilePhoto-victoria-cook.jpg
+│   │       └── profilePhoto-william-horton.jpg
+│   │
+│   ├── news/
+│   │   ├── image-1750923729588-524992233.jpg
+│   │   ├── image-1751063484284-805648295.png
+│   │   ├── image-1753783830903-3586185.jpg
+│   │   ├── image-1753783930753-479204360.jpg
+│   │   ├── image-1753783983641-243233116.jpg
+│   │   ├── image-1753784030373-956679903.jpg
+│   │   ├── image-1753784085272-444416372.jpg
+│   │   ├── image-1753790072396-268387573.jpg
+│   │   └── placeholder.jpg
+│   │
+│   ├── payment/
+│   │   ├── screenshot-1752407870818-109160925.png
+│   │   ├── screenshot-1753540271716-70479117.png
+│   │   ├── screenshot-1753540823809-62193955.png
+│   │   ├── screenshot-1753570404998-974000870.png
+│   │   ├── screenshot-1753570561787-908951123.png
+│   │   ├── screenshot-1753570678642-800777896.png
+│   │   ├── screenshot-1753647466871-568349662.png
+│   │   ├── screenshot-1753789390353-221497866.png
+│   │   ├── screenshot-1754002949883-621592.jpeg
+│   │   ├── screenshot-1754002982506-421468043.png
+│   │   ├── screenshot-1754003073770-318841723.jpeg
+│   │   ├── screenshot-1754003105662-635688138.jpeg
+│   │   ├── screenshot-1754003122042-934494032.jpeg
+│   │   ├── screenshot-1754003411355-907146412.jpeg
+│   │   ├── screenshot-1754003436202-62315557.jpeg
+│   │   ├── screenshot-1754003636198-497629854.jpeg
+│   │   └── screenshot-1754190023969-81231042.png
+│   │
+│   └── pdf/
+│       ├── 1750944953948-pdf.pdf
+│       ├── 1750945167082-pdf.pdf
+│       ├── 1750945175570-pdf.pdf
+│       ├── 1750945206987-pdf.pdf
+│       ├── 1751064203968-pdf.pdf
+│       ├── 1753735847233-pdf.pdf
+│       ├── 1753735861462-pdf.pdf
+│       ├── 1753735878382-pdf.pdf
+│       ├── 1753735893799-pdf.pdf
+│       ├── 1753735905510-pdf.pdf
+│       ├── 1753735921751-pdf.pdf
+│       ├── 1753735940767-pdf.pdf
+│       ├── 1753735970502-pdf.pdf
+│       ├── 1753735984383-pdf.pdf
+│       ├── 1753736009581-pdf.pdf
+│       ├── 1753736034990-pdf.pdf
+│       ├── 1753736081391-pdf.pdf
+│       ├── 1753736196495-pdf.pdf
+│       ├── 1753736226303-pdf.pdf
+│       ├── 1753736268351-pdf.pdf
+│       ├── 1753736340566-pdf.pdf
+│       └── 1753790044660-pdf.pdf
+│
+└── utils/
+    ├── analyticsSocket.js
+    ├── analyticsUtils.js
+    ├── calculateRevenue.js
+    ├── cloudinaryUpload.js
+    ├── customEncrypter.js
+    ├── embeddingHelper.js
+    ├── generateToken.js
+    ├── resetTrialFlags.js
+    └── slotUtils.js
+

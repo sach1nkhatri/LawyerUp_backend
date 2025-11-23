@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../middleware/uploadMiddleware');
+const { upload } = require('../middleware/uploadMiddleware');
 const authMiddleware = require('../middleware/authMiddleware');
 const newsController = require('../controllers/newsController');
 
